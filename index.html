@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaySlip Generator</title>
+    <link rel="stylesheet" href="styles.css">
+   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="main-header">
+        <div class="header-content">
+            <h1 class="site-title">OnlineToolBox</h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html" class="active">PaySlip Maker</a></li>
+                    <li><a href="tax.html">Tax Calculator</a></li>
+                    <li><a href="#">Car Value Checker</a></li>
+                    <li><a href="#">Invoice Generator</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="calculator-card">
+            <h2>PaySlip Generator</h2>
+
+            <!-- Company Information Section -->
+            <div class="company-details">
+                <h3>Company Information</h3>
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="companyLogo">Company Logo</label>
+                        <input type="file" id="companyLogo" accept="image/*">
+                        <div class="logo-preview"></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="companyName">Company Name</label>
+                        <input type="text" id="companyName" placeholder="Enter company name">
+                    </div>
+                    <div class="input-group">
+                        <label for="companyAddress">Company Address</label>
+                        <input type="text" id="companyAddress" placeholder="Enter company address">
+                    </div>
+                    <div class="input-group">
+                        <label for="poBox">PO Box</label>
+                        <input type="text" id="poBox" placeholder="Enter PO Box">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employee Details Section -->
+            <div class="employee-details">
+                <h3>Employee Details</h3>
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="employeeName">Employee Name</label>
+                        <input type="text" id="employeeName" placeholder="Enter employee name">
+                    </div>
+                    <div class="input-group">
+                        <label for="employeeId">Employee Number</label>
+                        <input type="text" id="employeeId" placeholder="Enter employee ID">
+                    </div>
+                    <div class="input-group">
+                        <label for="idNumber">Identity Number</label>
+                        <input type="text" id="idNumber" placeholder="Enter ID number">
+                    </div>
+                    <div class="input-group">
+                        <label for="designation">Designation</label>
+                        <input type="text" id="designation" placeholder="Enter designation">
+                    </div>
+                    <div class="input-group">
+                        <label for="department">Department</label>
+                        <input type="text" id="department" placeholder="Enter department">
+                    </div>
+                    <div class="input-group">
+                        <label for="payPoint">Pay Point</label>
+                        <input type="text" id="payPoint" placeholder="Enter pay point">
+                    </div>
+                    <div class="input-group">
+                        <label for="children">Number of Children</label>
+                        <input type="number" id="children" min="0" placeholder="Enter number of children">
+                    </div>
+                    <div class="input-group">
+                        <label for="sex">Sex</label>
+                        <select id="sex">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="status">Marital Status</label>
+                        <select id="status">
+                            <option value="single">Single</option>
+                            <option value="married">Married</option>
+                            <option value="divorced">Divorced</option>
+                            <option value="widowed">Widowed</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employment Details Section -->
+            <div class="employment-details">
+                <h3>Employment Details</h3>
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="hourlyRate">Hourly Rate</label>
+                        <input type="number" id="hourlyRate" step="0.01" placeholder="Enter hourly rate">
+                    </div>
+                    <div class="input-group">
+                        <label for="normalHours">Normal Hours</label>
+                        <input type="number" id="normalHours" placeholder="Enter normal hours">
+                    </div>
+                    <div class="input-group">
+                        <label for="leaveDays">Leave Days Due</label>
+                        <input type="number" id="leaveDays" step="0.5" placeholder="Enter leave days">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings Section -->
+            <div class="earnings-section">
+                <h3>Earnings</h3>
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="basicSalary">Basic Salary</label>
+                        <input type="number" id="basicSalary" step="0.01" placeholder="Enter basic salary">
+                    </div>
+                    <div class="input-group">
+                        <label for="otherBonus">Other Bonus</label>
+                        <input type="number" id="otherBonus" step="0.01" placeholder="Enter bonus amount">
+                    </div>
+                    <div class="input-group">
+                        <label for="overtimeHours">Overtime Hours</label>
+                        <input type="number" id="overtimeHours" step="0.5" placeholder="Enter overtime hours">
+                    </div>
+                    <div class="input-group">
+                        <label for="overtimeRate">Overtime Rate (@)</label>
+                        <input type="number" id="overtimeRate" step="0.1" placeholder="Enter overtime rate">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deductions Section -->
+            <div class="deductions-section">
+                <h3>Deductions</h3>
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="medicalAid">Medical Aid</label>
+                        <input type="number" id="medicalAid" step="0.01" placeholder="Enter medical aid amount">
+                    </div>
+                    <div class="input-group">
+                        <label for="pensionFund">Pension Fund</label>
+                        <input type="number" id="pensionFund" step="0.01" placeholder="Enter pension fund amount">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Period Section -->
+            <div class="period-section">
+                <h3>Period</h3>
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="paymentDate">Payment Date</label>
+                        <input type="date" id="paymentDate">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Style Customization Section -->
+            <div class="style-customization">
+                <h3>Payslip Style</h3>
+                <div class="style-options">
+                    <div class="input-section">
+                        <div class="input-group">
+                            <label for="payslipStyle">Select Style</label>
+                            <select id="payslipStyle">
+                                <option value="modern">Modern Clean</option>
+                                <option value="classic">Classic Professional</option>
+                                <option value="minimal">Minimal Design</option>
+                                <option value="corporate">Corporate Premium</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="primaryColor">Primary Color</label>
+                            <input type="color" id="primaryColor" value="#2563eb">
+                        </div>
+                        <div class="input-group">
+                            <label for="secondaryColor">Secondary Color</label>
+                            <input type="color" id="secondaryColor" value="#4f46e5">
+                        </div>
+                        <div class="input-group">
+                            <label for="accentColor">Accent Color</label>
+                            <input type="color" id="accentColor" value="#0ea5e9">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Style Previews -->
+                <div class="style-previews">
+                    <div class="preview-card modern" data-style="modern">
+                        <h4>Modern Clean</h4>
+                        <div class="preview-content"></div>
+                    </div>
+                    <div class="preview-card classic" data-style="classic">
+                        <h4>Classic Professional</h4>
+                        <div class="preview-content"></div>
+                    </div>
+                    <div class="preview-card minimal" data-style="minimal">
+                        <h4>Minimal Design</h4>
+                        <div class="preview-content"></div>
+                    </div>
+                    <div class="preview-card corporate" data-style="corporate">
+                        <h4>Corporate Premium</h4>
+                        <div class="preview-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button id="calculateBtn" class="calculate-btn">Calculate</button>
+                <button id="generatePdfBtn" class="generate-btn">Generate PaySlip PDF</button>
+            </div>
+
+            <!-- Results Section (PaySlip Preview) -->
+            <div id="payslip" class="results-section"></div>
+        </div>
+    </div>
+
+    <!-- PaySlip Template (Hidden by default) -->
+    <div id="payslip-container" style="display: none;">
+        <div id="payslip-pdf" class="payslip-modern">
+            <!-- PaySlip content will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script src="payslipMaker.js"></script>
+</body>
+</html>

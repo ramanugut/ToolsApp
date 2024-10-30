@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculator - OnlineToolBox</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Make sure to load Chart.js before your script -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <h1 class="site-title">OnlineToolBox</h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">PaySlip Maker</a></li>
+                    <li><a href="tax.html" class="active">Tax Calculator</a></li>
+                    <li><a href="#">Car Value Checker</a></li>
+                    <li><a href="#">Invoice Generator</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="calculator-card">
+            <h2 class="section-title">Calculate your monthly and annual income tax for the 2024/25 financial year</h2>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="ageSelect">How old will you be on 28 February 2025?</label>
+                    <select id="ageSelect" class="form-control">
+                        <option value="24">Under 24</option>
+                        <option value="34">25 - 34</option>
+                        <option value="49">35 - 49</option>
+                        <option value="64">50 - 64</option>
+                        <option value="74">65 - 74</option>
+                        <option value="75">Over 75</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="periodSelect">Income Period</label>
+                    <select id="periodSelect" class="form-control">
+                        <option value="hour">Hour</option>
+                        <option value="day">Day</option>
+                        <option value="week">Week</option>
+                        <option value="biweek">Two-Weekly</option>
+                        <option value="month" selected>Monthly</option>
+                        <option value="year">Annual</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="incomeAmount">Income Amount</label>
+                    <input type="number" id="incomeAmount" class="form-control" placeholder="Enter amount">
+                </div>
+
+                <div class="input-group">
+                    <label for="bonusAmount">Bonus (Optional)</label>
+                    <input type="number" id="bonusAmount" class="form-control" placeholder="Enter bonus amount">
+                </div>
+
+                <div class="input-group">
+                    <label for="overtimeAmount">Overtime (Optional)</label>
+                    <input type="number" id="overtimeAmount" class="form-control" placeholder="Enter overtime amount">
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="button" id="calculateTaxBtn" class="calculate-btn">Calculate Tax</button>
+            </div>
+
+            <div id="results" class="results-section" style="display: none;">
+                <h3>Tax Calculation Results</h3>
+                <div class="results-grid">
+                    <div class="results-details">
+                        <div class="result-item">
+                            <span>Annual Salary:</span>
+                            <span id="annualSalary"></span>
+                        </div>
+                        <div class="result-item">
+                            <span>Monthly Salary:</span>
+                            <span id="monthlySalary"></span>
+                        </div>
+                        <div class="result-item">
+                            <span>PAYE (Monthly):</span>
+                            <span id="monthlyPAYE"></span>
+                        </div>
+                        <div class="result-item">
+                            <span>UIF (Monthly):</span>
+                            <span id="monthlyUIF"></span>
+                        </div>
+                        <div class="result-item">
+                            <span>Total Tax (Monthly):</span>
+                            <span id="monthlyTotalTax"></span>
+                        </div>
+                        <div class="result-item">
+                            <span>Net Pay (Monthly):</span>
+                            <span id="monthlyNetPay"></span>
+                        </div>
+                        <div class="result-item">
+                            <span>Marginal Tax Rate:</span>
+                            <span id="marginalRate"></span>
+                        </div>
+                        <div class="result-item">
+                            <span>Average Tax Rate:</span>
+                            <span id="averageRate"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="taxChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="tax-summary">
+                    <h4>Summary</h4>
+                    <p id="summaryText"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tax-explanations">
+        <h3>Understanding Your Tax Results</h3>
+        <div class="explanation-grid">
+            <div class="explanation-item">
+                <h4>Annual Salary</h4>
+                <p>Your total earnings for the year before any deductions. For monthly earners, this is your monthly salary multiplied by 12.</p>
+            </div>
+    
+            <div class="explanation-item">
+                <h4>Monthly Salary</h4>
+                <p>Your gross monthly earnings before any tax or deductions are taken out. This is what you earn each month before PAYE and UIF.</p>
+            </div>
+    
+            <div class="explanation-item">
+                <h4>PAYE (Pay As You Earn)</h4>
+                <p>The monthly income tax deducted from your salary. This amount is calculated based on your tax bracket and includes applicable rebates based on your age.</p>
+            </div>
+    
+            <div class="explanation-item">
+                <h4>UIF (Unemployment Insurance Fund)</h4>
+                <p>A mandatory contribution of 1% of your salary (capped at R177.12 per month) that provides short-term relief if you become unemployed or are unable to work.</p>
+            </div>
+    
+            <div class="explanation-item">
+                <h4>Total Tax</h4>
+                <p>The combined amount of your PAYE and UIF deductions. This is your total monthly contribution to tax and unemployment insurance.</p>
+            </div>
+    
+            <div class="explanation-item">
+                <h4>Net Pay</h4>
+                <p>Your take-home pay after all deductions. This is the amount that will actually be paid into your bank account each month.</p>
+            </div>
+    
+            <div class="explanation-item">
+                <h4>Marginal Tax Rate</h4>
+                <p>The percentage of tax you'll pay on your next rand earned. This shows how much of any additional income will go to tax.</p>
+            </div>
+    
+            <div class="explanation-item">
+                <h4>Average Tax Rate</h4>
+                <p>The percentage of your total income that you pay in tax. Calculated by dividing your total tax by your annual income.</p>
+            </div>
+    
+            <div class="explanation-item">
+                <h4>Tax Rebates</h4>
+                <p>Tax credits that reduce your tax liability:
+                    <ul>
+                        <li>Primary Rebate: R17,235 (all taxpayers)</li>
+                        <li>Secondary Rebate: Additional R9,444 (age 65+)</li>
+                        <li>Tertiary Rebate: Additional R3,145 (age 75+)</li>
+                    </ul>
+                </p>
+            </div>
+    
+            <div class="explanation-item">
+                <h4>Tax Thresholds (2024/25)</h4>
+                <p>The amount below which you don't pay income tax:
+                    <ul>
+                        <li>Below 65: R95,750</li>
+                        <li>65 to 74: R148,217</li>
+                        <li>75 and over: R165,689</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="taxCalculator.js"></script>
+</body>
+</html>
