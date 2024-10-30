@@ -2,7 +2,7 @@
 This project will be a combination of multiple small web apps that can be used by individuals and small businesses to speed up some of their processes.
 I'm creating this as a fun project and will be updating it as time goes on as part of my JavaScript learning projects.
 
-# Financial Tools:
+**# Financial Tools:**
 Invoice Generator
 VAT Calculator
 Loan/Mortgage Calculator
