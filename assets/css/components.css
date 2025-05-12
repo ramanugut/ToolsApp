@@ -1,0 +1,487 @@
+/* VAT Switch */
+.vat-switch {
+  margin: var(--spacing-md) 0;
+}/* 
+  ToolsApp 2.0 – components.css
+  --------------------------------------------------------------
+  Tool-specific components and custom styles for each page:
+    • Payslip styles
+    • Invoice styles 
+    • Calculator-specific layouts
+    • Printable templates
+    • Tool-specific visualizations
+*/
+
+/* =========================================================
+   1. Payslip Maker Specific Styles
+   ========================================================= */
+/* Payslip Preview */
+.payslip-preview {
+  background-color: white;
+  color: #333;
+  padding: 2rem;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  margin-top: var(--spacing-xl);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.payslip-wrapper {
+  border: 1px solid #ddd;
+  padding: 2rem;
+}
+
+.payslip-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--color-primary);
+}
+
+.payslip-header h2 {
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.payslip-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.payslip-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.payslip-table th, .payslip-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.payslip-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+.payslip-table .net {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* Invoice styles - Professional look */
+.invoice-preview {
+  background-color: white;
+  color: #333;
+  padding: 2rem;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  margin-top: var(--spacing-xl);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.invoice-wrapper {
+  border: 1px solid #ddd;
+  padding: 2rem;
+  position: relative;
+}
+
+.invoice-header {
+  display: flex;
+  margin-bottom: 2rem;
+  gap: 2rem;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 1.5rem;
+  position: relative;
+}
+
+.invoice-header::after {
+  content: attr(data-generated);
+  position: absolute;
+  bottom: 5px;
+  right: 0;
+  font-size: 10px;
+  color: #777;
+}
+
+.logo {
+  max-width: 200px;
+  max-height: 80px;
+  object-fit: contain;
+}
+
+.biz-details {
+  flex: 1;
+}
+
+.biz-details h2 {
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+}
+
+.biz-details p {
+  margin-bottom: 0.3rem;
+  line-height: 1.4;
+}
+
+.client-details, .invoice-meta {
+  margin-bottom: 2rem;
+}
+
+.client-details h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-primary);
+}
+
+.invoice-meta {
+  background-color: var(--color-surface);
+  padding: 1rem;
+  border-radius: var(--border-radius-sm);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.invoice-meta p {
+  margin: 0;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.invoice-table th {
+  background-color: var(--color-primary);
+  color: white;
+  text-align: left;
+  padding: 0.75rem;
+  font-weight: 500;
+}
+
+.invoice-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.invoice-table .even-row {
+  background-color: var(--color-surface);
+}
+
+.invoice-table tfoot td {
+  padding: 0.75rem;
+  border-top: 2px solid #ddd;
+  font-weight: 600;
+}
+
+.invoice-table .net {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Print specific styles */
+@media print {
+  .invoice-wrapper {
+    border: none;
+    padding: 0;
+  }
+  
+  .invoice-header {
+    border-bottom-width: 1px;
+  }
+  
+  .invoice-table th {
+    background-color: #f1f1f1 !important;
+    color: #333 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .footer-note {
+    margin-top: 50px;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: #777;
+  }
+}
+
+/* =========================================================
+   3. Loan Calculator Specific Styles
+   ========================================================= */
+.amort-table {
+  font-size: var(--font-size-sm);
+}
+
+.amort-table th, .amort-table td {
+  padding: 0.5rem;
+}
+
+/* =========================================================
+   4. Budget Planner Specific Styles
+   ========================================================= */
+.budget-table {
+  margin-top: var(--spacing-lg);
+}
+
+.budget-table .category-header {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+/* =========================================================
+   5. Retirement Planner Specific Styles
+   ========================================================= */
+.projection-table {
+  font-size: var(--font-size-sm);
+}
+
+.projection-table th, .projection-table td {
+  padding: 0.5rem;
+}
+
+/* Key years (retirement, etc) */
+.key-year {
+  background-color: rgba(var(--color-primary-rgb), 0.1);
+}
+
+/* =========================================================
+   6. Tax Calculator Specific Styles
+   ========================================================= */
+.tax-bracket-table {
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.tax-bracket-table th, .tax-bracket-table td {
+  padding: 0.5rem;
+}
+
+.bracket-active {
+  background-color: rgba(var(--color-primary-rgb), 0.1);
+  font-weight: 600;
+}
+
+.tax-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+
+.tax-breakdown-chart {
+  margin-top: var(--spacing-lg);
+  height: 350px !important;
+}
+
+/* =========================================================
+   7. Converters Specific Styles
+   ========================================================= */
+.converter-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+#swapCurrencyBtn {
+  display: block;
+  margin: var(--spacing-md) auto;
+  width: 120px;
+}
+
+.rate-note {
+  text-align: center;
+  margin-top: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* =========================================================
+   8. Chart Styles
+   ========================================================= */
+/* Common chart container */
+.chart-container {
+  position: relative;
+  height: 350px;
+  margin: var(--spacing-lg) 0;
+}
+
+/* Legend styling */
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  justify-content: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+/* =========================================================
+   9. Tool-Specific Dark Mode Adjustments
+   ========================================================= */
+.dark .payslip-preview,
+.dark .invoice-preview {
+  background-color: #1a1a1a;
+  color: #f0f0f0;
+}
+
+.dark .payslip-table th,
+.dark .invoice-table th, 
+.dark .budget-table .category-header {
+  background-color: #252525;
+}
+
+.dark .payslip-table th, 
+.dark .payslip-table td,
+.dark .invoice-table th, 
+.dark .invoice-table td,
+.dark .amort-table th, 
+.dark .amort-table td,
+.dark .projection-table th, 
+.dark .projection-table td,
+.dark .tax-bracket-table th, 
+.dark .tax-bracket-table td,
+.dark .budget-table th, 
+.dark .budget-table td {
+  border-color: #444;
+}
+
+.dark .key-year,
+.dark .bracket-active {
+  background-color: rgba(var(--color-primary-rgb), 0.2);
+}
+
+/* =========================================================
+   10. Printable Elements
+   ========================================================= */
+@media print {
+  @page {
+    size: A4;
+    margin: 1cm;
+  }
+  
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+  
+  .payslip-preview,
+  .invoice-preview {
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+  
+  .payslip-wrapper,
+  .invoice-wrapper {
+    border: none !important;
+  }
+}
+
+/* =========================================================
+   11. Visual Helpers and Animations
+   ========================================================= */
+/* Loading indicator */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(var(--color-primary-rgb), 0.3);
+  border-radius: 50%;
+  border-top-color: var(--color-primary);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 100;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Card hover effect */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* =========================================================
+   12. Responsive Adjustments
+   ========================================================= */
+@media (max-width: 768px) {
+  .payslip-details,
+  .tax-summary {
+    grid-template-columns: 1fr;
+  }
+  
+  .invoice-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .chart-container {
+    height: 300px;
+  }
+}   

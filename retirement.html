@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Plan your retirement with our interactive savings forecaster - ToolsApp 2.0">
+  <meta name="theme-color" content="#4a6fa5">
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  
+  <!-- Google Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <!-- Third-party libraries -->
+  <script src="assets/libs/chart.js/chart.umd.min.js" defer></script>
+  <script src="assets/libs/html2canvas/html2canvas.min.js" defer></script>
+  <script src="assets/libs/jspdf/jspdf.umd.min.js" defer></script>
+
+  <title>Retirement Planner – ToolsApp 2.0</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  
+  <!-- App manifest (for PWA) -->
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <!-- Skip-link for accessibility -->
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- Header / Top-bar -->
+  <header class="topbar" role="banner">
+    <button class="menu-toggle" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false">
+      <i class="material-icons">menu</i>
+    </button>
+    <h1 class="app-title">ToolsApp 2.0</h1>
+    <div class="spacer" aria-hidden="true"></div>
+    <button id="darkModeToggle" aria-label="Toggle dark mode">
+      <i class="material-icons moon-icon">nights_stay</i>
+      <i class="material-icons sun-icon">wb_sunny</i>
+    </button>
+  </header>
+
+  <!-- Collapsible sidebar navigation -->
+  <nav id="sidebar" class="sidebar" aria-label="Primary navigation">
+    <div class="sidebar-header">
+      <button class="sidebar-close" aria-label="Close navigation">
+        <i class="material-icons">close</i>
+      </button>
+      <h2>Menu</h2>
+    </div>
+    <ul class="nav-list">
+      <li><a href="index.html"><i class="material-icons nav-icon">home</i> Home</a></li>
+      <li><a href="payslip.html"><i class="material-icons nav-icon">receipt</i> Payslip Maker</a></li>
+      <li><a href="tax.html"><i class="material-icons nav-icon">account_balance</i> Tax Calculator</a></li>
+      <li><a href="loan.html"><i class="material-icons nav-icon">payments</i> Loan & Bond Calculator</a></li>
+      <li><a href="budget.html"><i class="material-icons nav-icon">pie_chart</i> Budget Planner</a></li>
+      <li><a href="retirement.html" class="active"><i class="material-icons nav-icon">beach_access</i> Retirement Planner</a></li>
+      <li><a href="invoice.html"><i class="material-icons nav-icon">description</i> Invoice Generator</a></li>
+      <li><a href="converters.html"><i class="material-icons nav-icon">swap_horiz</i> Converters</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <p>Version 2.0.1</p>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main id="main" tabindex="-1">
+    <header class="page-header">
+      <h2>Retirement Savings Forecaster</h2>
+      <p>Project your nest egg size and see how small tweaks in contribution or return affect your future.</p>
+    </header>
+
+    <!-- Planner form -->
+    <form id="retirementForm" class="retirement-form" novalidate>
+      <fieldset>
+        <legend><i class="material-icons legend-icon">person</i> Your Details</legend>
+        <div class="grid-3">
+          <label>
+            Current age
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">calendar_today</i>
+              <input type="number" id="currentAge" min="16" max="100" required>
+            </div>
+          </label>
+          <label>
+            Retirement age
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">event_available</i>
+              <input type="number" id="retirementAge" min="40" max="100" required>
+            </div>
+          </label>
+          <label>
+            Life expectancy (yrs after retirement)
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">trending_up</i>
+              <input type="number" id="lifeExpectancy" min="10" max="60" value="25" required>
+            </div>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><i class="material-icons legend-icon">savings</i> Savings &amp; Contributions</legend>
+        <div class="grid-2">
+          <label>
+            Current savings (R)
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">account_balance_wallet</i>
+              <input type="number" id="currentSavings" min="0" step="0.01" required>
+            </div>
+          </label>
+          <label>
+            Monthly contribution (R)
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">payments</i>
+              <input type="number" id="monthlyContribution" min="0" step="0.01" required>
+            </div>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><i class="material-icons legend-icon">trending_up</i> Growth Assumptions</legend>
+        <div class="grid-3">
+          <label>
+            Expected annual return (%)
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">attach_money</i>
+              <input type="number" id="annualReturn" min="0" step="0.1" value="7" required>
+            </div>
+          </label>
+          <label>
+            Expected inflation (%)
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">show_chart</i>
+              <input type="number" id="inflationRate" min="0" step="0.1" value="5" required>
+            </div>
+          </label>
+          <label>
+            Account fees (%)
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">credit_card</i>
+              <input type="number" id="feeRate" min="0" step="0.1" value="1">
+            </div>
+          </label>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="adjustForInflation" checked>
+          <span class="switch-label">Adjust for inflation</span>
+        </label>
+      </fieldset>
+
+      <!-- Summary -->
+      <section class="summary" aria-label="Projection summary">
+        <h3><i class="material-icons summary-icon">analytics</i> Summary</h3>
+        <div class="grid-3">
+          <div class="summary-item">
+            <span class="label">Nest egg at retirement</span>
+            <output id="nestEgg">R0.00</o>
+          </div>
+          <div class="summary-item">
+            <span class="label">Real value (today's rands)</span>
+            <output id="realValue">R0.00</o>
+          </div>
+          <div class="summary-item">
+            <span class="label">Monthly draw (4% rule)</span>
+            <output id="monthlyDraw">R0.00</o>
+          </div>
+        </div>
+      </section>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="button" id="calculateBtn">
+          <i class="material-icons">calculate</i> Calculate
+        </button>
+        <button type="reset">
+          <i class="material-icons">refresh</i> Reset
+        </button>
+        <button type="button" id="printBtn">
+          <i class="material-icons">print</i> Print
+        </button>
+        <button type="button" id="downloadPdfBtn">
+          <i class="material-icons">picture_as_pdf</i> Download PDF
+        </button>
+      </div>
+    </form>
+
+    <!-- Results: chart and table -->
+    <section class="results" aria-label="Growth chart" hidden>
+      <h3><i class="material-icons">show_chart</i> Growth Projection</h3>
+      <div class="chart-container">
+        <canvas id="growthChart" aria-label="Retirement growth chart" role="img"></canvas>
+      </div>
+
+      <div class="table-container">
+        <table id="projectionTable" class="projection-table" aria-label="Yearly projection table">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Age</th>
+              <th>Start Balance (R)</th>
+              <th>Contribution (R)</th>
+              <th>Growth (R)</th>
+              <th>End Balance (R)</th>
+            </tr>
+          </thead>
+          <tbody><!-- JS injects --></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 ToolsApp. &copy; Ramanugu TM</p>
+      <div class="footer-links">
+        <a href="#" class="footer-link">Terms</a>
+        <a href="#" class="footer-link">Privacy</a>
+        <a href="#" class="footer-link">About</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/retirementPlanner.js" defer></script>
+</body>
+</html>

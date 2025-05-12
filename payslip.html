@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Create professional payslips quickly and easily with ToolsApp 2.0">
+  <meta name="theme-color" content="#4a6fa5">
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  
+  <!-- Google Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <!-- Third-party libraries -->
+  <script src="assets/libs/chart.js/chart.umd.min.js" defer></script>
+  <script src="assets/libs/html2canvas/html2canvas.min.js" defer></script>
+  <script src="assets/libs/jspdf/jspdf.umd.min.js" defer></script>
+
+  <title>Payslip Maker – ToolsApp 2.0</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  
+  <!-- App manifest (for PWA) -->
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <!-- Skip-link for accessibility -->
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- Header / Top-bar -->
+  <header class="topbar" role="banner">
+    <button class="menu-toggle" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false">
+      <i class="material-icons">menu</i>
+    </button>
+    <h1 class="app-title">ToolsApp 2.0</h1>
+    <div class="spacer" aria-hidden="true"></div>
+    <button id="darkModeToggle" aria-label="Toggle dark mode">
+      <i class="material-icons moon-icon">nights_stay</i>
+      <i class="material-icons sun-icon">wb_sunny</i>
+    </button>
+  </header>
+
+  <!-- Collapsible sidebar navigation -->
+  <nav id="sidebar" class="sidebar" aria-label="Primary navigation">
+    <div class="sidebar-header">
+      <button class="sidebar-close" aria-label="Close navigation">
+        <i class="material-icons">close</i>
+      </button>
+      <h2>Menu</h2>
+    </div>
+    <ul class="nav-list">
+      <li><a href="index.html"><i class="material-icons nav-icon">home</i> Home</a></li>
+      <li><a href="payslip.html" class="active"><i class="material-icons nav-icon">receipt</i> Payslip Maker</a></li>
+      <li><a href="tax.html"><i class="material-icons nav-icon">account_balance</i> Tax Calculator</a></li>
+      <li><a href="loan.html"><i class="material-icons nav-icon">payments</i> Loan & Bond Calculator</a></li>
+      <li><a href="budget.html"><i class="material-icons nav-icon">pie_chart</i> Budget Planner</a></li>
+      <li><a href="retirement.html"><i class="material-icons nav-icon">beach_access</i> Retirement Planner</a></li>
+      <li><a href="invoice.html"><i class="material-icons nav-icon">description</i> Invoice Generator</a></li>
+      <li><a href="converters.html"><i class="material-icons nav-icon">swap_horiz</i> Converters</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <p>Version 2.0.1</p>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main id="main" tabindex="-1">
+    <header class="page-header">
+      <h2>Payslip Maker</h2>
+      <p>Fill in the details below and get a professional payslip ready to download or print – no sign-up needed.</p>
+    </header>
+
+    <!-- Payslip form -->
+    <form id="payslipForm" class="payslip-form" novalidate>
+      <!-- Employer details -->
+      <fieldset>
+        <legend>Employer Details</legend>
+        <div class="grid-2">
+          <label>
+            Company name
+            <input type="text" id="companyName" required>
+          </label>
+          <label>
+            Company address
+            <input type="text" id="companyAddress" required>
+          </label>
+        </div>
+        <label>
+          Contact (phone or email)
+          <input type="text" id="companyContact" required>
+        </label>
+      </fieldset>
+
+      <!-- Employee details -->
+      <fieldset>
+        <legend>Employee Details</legend>
+        <div class="grid-2">
+          <label>
+            Employee full name
+            <input type="text" id="employeeName" required>
+          </label>
+          <label>
+            ID / Passport number
+            <input type="text" id="employeeId" required>
+          </label>
+        </div>
+        <div class="grid-2">
+          <label>
+            Employee # (optional)
+            <input type="text" id="employeeNumber">
+          </label>
+          <label>
+            Pay period (e.g. Apr 2025)
+            <input type="text" id="payPeriod" required>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Earnings -->
+      <fieldset>
+        <legend>Earnings</legend>
+        <label>
+          Basic salary (R)
+          <input type="number" id="basicSalary" min="0" step="0.01" required>
+        </label>
+
+        <!-- Dynamic allowance list -->
+        <div id="allowancesContainer" class="dynamic-list" data-type="allowance">
+          <h4>Allowances</h4>
+          <button type="button" class="add-row" data-target="allowancesContainer">
+            <i class="material-icons">add</i> Add allowance
+          </button>
+          <!-- JS will inject rows of {description, amount} here -->
+        </div>
+      </fieldset>
+
+      <!-- Deductions -->
+      <fieldset>
+        <legend>Deductions</legend>
+        <label>
+          PAYE (R)
+          <input type="number" id="paye" min="0" step="0.01">
+        </label>
+        <label>
+          UIF (R)
+          <input type="number" id="uif" min="0" step="0.01">
+        </label>
+
+        <!-- Dynamic deduction list -->
+        <div id="deductionsContainer" class="dynamic-list" data-type="deduction">
+          <h4>Other deductions</h4>
+          <button type="button" class="add-row" data-target="deductionsContainer">
+            <i class="material-icons">add</i> Add deduction
+          </button>
+          <!-- JS will inject rows of {description, amount} here -->
+        </div>
+      </fieldset>
+
+      <!-- Summary outputs -->
+      <section class="summary" aria-label="Summary">
+        <h3>Summary</h3>
+        <div class="grid-3">
+          <div class="summary-item">
+            <span class="label">Gross earnings</span>
+            <output id="grossEarnings">R0.00</output>
+          </div>
+          <div class="summary-item">
+            <span class="label">Total deductions</span>
+            <output id="totalDeductions">R0.00</output>
+          </div>
+          <div class="summary-item net">
+            <span class="label">Net pay</span>
+            <output id="netPay">R0.00</output>
+          </div>
+        </div>
+      </section>
+
+      <!-- Action buttons -->
+      <div class="form-actions">
+        <button type="button" id="calculateBtn">
+          <i class="material-icons">calculate</i> Calculate
+        </button>
+        <button type="reset">
+          <i class="material-icons">refresh</i> Reset
+        </button>
+        <button type="button" id="printBtn">
+          <i class="material-icons">print</i> Print
+        </button>
+        <button type="button" id="downloadPdfBtn">
+          <i class="material-icons">picture_as_pdf</i> Download PDF
+        </button>
+      </div>
+    </form>
+
+    <!-- Hidden printable payslip template -->
+    <section id="payslipPreview" class="payslip-preview" aria-label="Payslip preview" hidden>
+      <!-- JS will clone & populate this section for printing/PDF -->
+      <div class="payslip-wrapper">
+        <header class="payslip-header">
+          <h2 id="pvCompanyName"></h2>
+          <p id="pvCompanyAddress"></p>
+          <p id="pvCompanyContact"></p>
+        </header>
+
+        <section class="payslip-details">
+          <p><strong>Employee:</strong> <span id="pvEmployeeName"></span></p>
+          <p><strong>ID / Passport #:</strong> <span id="pvEmployeeId"></span></p>
+          <p><strong>Employee #:</strong> <span id="pvEmployeeNumber"></span></p>
+          <p><strong>Pay period:</strong> <span id="pvPayPeriod"></span></p>
+        </section>
+
+        <table class="payslip-table" aria-label="Earnings and deductions table">
+          <thead>
+            <tr>
+              <th>Earnings</th>
+              <th>Amount (R)</th>
+              <th>Deductions</th>
+              <th>Amount (R)</th>
+            </tr>
+          </thead>
+          <tbody id="pvTableBody"><!-- JS fills rows --></tbody>
+          <tfoot>
+            <tr>
+              <td><strong>Gross Earnings</strong></td>
+              <td id="pvGross"></td>
+              <td><strong>Total Deductions</strong></td>
+              <td id="pvDeductions"></td>
+            </tr>
+            <tr>
+              <td colspan="2"></td>
+              <td><strong>Net Pay</strong></td>
+              <td id="pvNet" class="net"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 ToolsApp. &copy; Ramanugu TM</p>
+      <div class="footer-links">
+        <a href="#" class="footer-link">Terms</a>
+        <a href="#" class="footer-link">Privacy</a>
+        <a href="#" class="footer-link">About</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Core scripts -->
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/payslip.js" defer></script>
+</body>
+</html>

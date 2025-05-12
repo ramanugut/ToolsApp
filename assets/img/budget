@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Budget Planner icon – flat SVG -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" aria-labelledby="title">
+  <title>Budget Icon</title>
+  <defs>
+    <style>
+      .sheet { fill:#006c5b; }
+      .fold  { fill:#059380; }
+      .slice1 { fill:#ffffff; }
+      .slice2 { fill:#f2994a; }
+      .slice3 { fill:#1e8e3e; }
+    </style>
+  </defs>
+  <!-- Document -->
+  <path class="sheet" d="M8 4h32l16 16v40a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z"/>
+  <!-- Folded corner -->
+  <polygon class="fold" points="40 4 40 20 56 20 40 4"/>
+
+  <!-- Pie chart (50/30/20) -->
+  <circle cx="32" cy="40" r="10" fill="#ffffff"/>
+  <path class="slice1" d="M32 40 L32 30 A10 10 0 0 1 41.78 35.86 Z"/>
+  <path class="slice2" d="M32 40 L41.78 35.86 A10 10 0 0 1 36.36 48.45 Z"/>
+  <path class="slice3" d="M32 40 L36.36 48.45 A10 10 0 0 1 32 50 Z"/>
+</svg>

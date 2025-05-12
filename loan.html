@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Calculate your SARS PAYE income tax with ToolsApp 2.0">
+  <meta name="description" content="Calculate loan and bond repayments with amortization schedule - ToolsApp 2.0">
   <meta name="theme-color" content="#4a6fa5">
   
   <!-- Favicons -->
@@ -19,7 +19,7 @@
   <script src="assets/libs/html2canvas/html2canvas.min.js" defer></script>
   <script src="assets/libs/jspdf/jspdf.umd.min.js" defer></script>
 
-  <title>Tax Calculator – ToolsApp 2.0</title>
+  <title>Loan &amp; Bond Calculator – ToolsApp 2.0</title>
   
   <!-- Stylesheets -->
   <link rel="stylesheet" href="assets/css/styles.css">
@@ -56,8 +56,8 @@
     <ul class="nav-list">
       <li><a href="index.html"><i class="material-icons nav-icon">home</i> Home</a></li>
       <li><a href="payslip.html"><i class="material-icons nav-icon">receipt</i> Payslip Maker</a></li>
-      <li><a href="tax.html" class="active"><i class="material-icons nav-icon">account_balance</i> Tax Calculator</a></li>
-      <li><a href="loan.html"><i class="material-icons nav-icon">payments</i> Loan & Bond Calculator</a></li>
+      <li><a href="tax.html"><i class="material-icons nav-icon">account_balance</i> Tax Calculator</a></li>
+      <li><a href="loan.html" class="active"><i class="material-icons nav-icon">payments</i> Loan & Bond Calculator</a></li>
       <li><a href="budget.html"><i class="material-icons nav-icon">pie_chart</i> Budget Planner</a></li>
       <li><a href="retirement.html"><i class="material-icons nav-icon">beach_access</i> Retirement Planner</a></li>
       <li><a href="invoice.html"><i class="material-icons nav-icon">description</i> Invoice Generator</a></li>
@@ -71,131 +71,113 @@
   <!-- Main content -->
   <main id="main" tabindex="-1">
     <header class="page-header">
-      <h2>Income Tax Calculator</h2>
-      <p>Calculate your SARS PAYE tax for the 2024/25 tax year using official brackets and rates.</p>
+      <h2>Loan &amp; Bond Repayment Calculator</h2>
+      <p>Figure out repayments, interest and payoff timelines for any loan or home bond – all offline.</p>
     </header>
 
-    <!-- Tax form -->
-    <form id="taxForm" class="tax-form" novalidate>
+    <!-- Loan form -->
+    <form id="loanForm" class="loan-form" novalidate>
       <fieldset>
-        <legend>Annual Income</legend>
+        <legend>Loan Details</legend>
         <div class="grid-2">
           <label>
-            Gross annual income (R)
-            <input type="number" id="annualIncome" min="0" step="0.01" required>
+            Loan amount (R)
+            <input type="number" id="loanAmount" min="0" step="0.01" required>
           </label>
           <label>
-            Deductions (pension, RA, etc.)
-            <input type="number" id="deductions" min="0" step="0.01" value="0">
+            Interest rate (annual %) 
+            <input type="number" id="interestRate" min="0" step="0.01" required>
           </label>
         </div>
-        <label class="switch">
-          <input type="checkbox" id="showMonthly" checked>
-          <span class="switch-label">Show monthly breakdown</span>
+        <div class="grid-2">
+          <label>
+            Term (years)
+            <input type="number" id="loanTerm" min="1" step="1" required>
+          </label>
+          <label>
+            Repayment frequency
+            <select id="repaymentFreq" required>
+              <option value="monthly">Monthly</option>
+              <option value="fortnightly">Fortnightly</option>
+              <option value="weekly">Weekly</option>
+            </select>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Extra payments -->
+      <fieldset>
+        <legend>Extra Payments (Optional)</legend>
+        <label>
+          Extra repayment per period (R)
+          <div class="input-with-icon">
+            <i class="material-icons input-icon">add_circle_outline</i>
+            <input type="number" id="extraPayment" min="0" step="0.01" value="0">
+          </div>
         </label>
       </fieldset>
 
-      <!-- Annual totals -->
-      <section class="summary" aria-label="Annual summary">
-        <h3>Annual Summary</h3>
+      <!-- Summary outputs -->
+      <section class="summary" aria-label="Summary outputs">
+        <h3>Summary</h3>
         <div class="grid-3">
           <div class="summary-item">
-            <span class="label">Income Tax</span>
-            <output id="annualTax">—</output>
+            <span class="label">Repayment per period</span>
+            <output id="paymentPerPeriod">R0.00</output>
           </div>
           <div class="summary-item">
-            <span class="label">Net Income</span>
-            <output id="annualNet">—</output>
+            <span class="label">Total interest</span>
+            <output id="totalInterest">R0.00</output>
           </div>
           <div class="summary-item">
-            <span class="label">Average Tax Rate</span>
-            <output id="avgRate">—</output>
+            <span class="label">Total paid</span>
+            <output id="totalPaid">R0.00</output>
+          </div>
+          <div class="summary-item">
+            <span class="label">Payoff date</span>
+            <output id="payoffDate">—</output>
           </div>
         </div>
       </section>
 
-      <!-- Monthly breakdown -->
-      <section id="monthlySection" class="summary" aria-label="Monthly breakdown">
-        <h3>Monthly Breakdown</h3>
-        <div class="tax-summary">
-          <div class="summary-item">
-            <span class="label">Monthly Tax</span>
-            <output id="monthlyTax">—</output>
-          </div>
-          <div class="summary-item">
-            <span class="label">Monthly Net (Take-home)</span>
-            <output id="monthlyNet">—</output>
-          </div>
-        </div>
-      </section>
-
-      <!-- Actions -->
+      <!-- Action buttons -->
       <div class="form-actions">
-        <button type="button" id="calculateBtn">Calculate</button>
-        <button type="reset">Reset</button>
+        <button type="button" id="calculateBtn">
+          <i class="material-icons">calculate</i> Calculate
+        </button>
+        <button type="reset">
+          <i class="material-icons">refresh</i> Reset
+        </button>
+        <button type="button" id="printBtn">
+          <i class="material-icons">print</i> Print
+        </button>
+        <button type="button" id="downloadPdfBtn">
+          <i class="material-icons">picture_as_pdf</i> Download PDF
+        </button>
       </div>
     </form>
 
-    <!-- Results visualization -->
-    <section class="results" aria-label="Tax visualization">
-      <h3>Tax vs. Net Income</h3>
+    <!-- Chart and amortisation table -->
+    <section class="results" aria-label="Results" hidden>
+      <h3>Amortisation Schedule</h3>
       <div class="chart-container">
-        <canvas id="taxChart" aria-label="Tax breakdown chart" role="img"></canvas>
+        <canvas id="amortChart" aria-label="Amortisation chart" role="img"></canvas>
       </div>
 
-      <!-- Tax bracket info table -->
-      <table class="tax-bracket-table" aria-label="Tax brackets 2024/25">
-        <caption>SARS 2024/25 Tax Brackets</caption>
-        <thead>
-          <tr>
-            <th>Taxable Income (R)</th>
-            <th>Rate</th>
-            <th>Base Amount (R)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>0 - 237,100</td>
-            <td>18%</td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td>237,101 - 370,500</td>
-            <td>26%</td>
-            <td>42,678</td>
-          </tr>
-          <tr>
-            <td>370,501 - 512,800</td>
-            <td>31%</td>
-            <td>77,362</td>
-          </tr>
-          <tr>
-            <td>512,801 - 673,000</td>
-            <td>36%</td>
-            <td>121,475</td>
-          </tr>
-          <tr>
-            <td>673,001 - 857,900</td>
-            <td>39%</td>
-            <td>179,147</td>
-          </tr>
-          <tr>
-            <td>857,901 - 1,817,000</td>
-            <td>41%</td>
-            <td>251,258</td>
-          </tr>
-          <tr>
-            <td>1,817,001+</td>
-            <td>45%</td>
-            <td>644,489</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3">Primary rebate: R17,235 (Tax credit applied to all taxpayers)</td>
-          </tr>
-        </tfoot>
-      </table>
+      <div class="table-container">
+        <table id="amortTable" class="amort-table" aria-label="Amortisation breakdown">
+          <thead>
+            <tr>
+              <th>Period</th>
+              <th>Payment (R)</th>
+              <th>Principal (R)</th>
+              <th>Interest (R)</th>
+              <th>Balance (R)</th>
+            </tr>
+          </thead>
+          <tbody><!-- JS populates rows here --></tbody>
+        </table>
+      </div>
     </section>
   </main>
 
@@ -211,8 +193,8 @@
     </div>
   </footer>
 
-  <!-- Core script -->
+  <!-- Scripts -->
   <script src="assets/js/main.js" defer></script>
-  <script src="assets/js/taxCalculator.js" defer></script>
+  <script src="assets/js/loanCalculator.js" defer></script>
 </body>
 </html>

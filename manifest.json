@@ -1,0 +1,21 @@
+{
+  "name": "ToolsApp 2.0",
+  "short_name": "ToolsApp",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#006c5b",
+  "icons": [
+    {
+      "src": "assets/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "description": "Offline personal-finance and utility toolkit: payslip, tax, loan, budgeting, retirement, invoices and converters."
+}

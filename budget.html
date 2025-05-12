@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Create a 50/30/20 budget plan with our easy-to-use tool - ToolsApp 2.0">
+  <meta name="theme-color" content="#4a6fa5">
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  
+  <!-- Google Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <!-- Third-party libraries -->
+  <script src="assets/libs/chart.js/chart.umd.min.js" defer></script>
+  <script src="assets/libs/html2canvas/html2canvas.min.js" defer></script>
+  <script src="assets/libs/jspdf/jspdf.umd.min.js" defer></script>
+
+  <title>Budget Planner – ToolsApp 2.0</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  
+  <!-- App manifest (for PWA) -->
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <!-- Skip-link for accessibility -->
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- Header / Top-bar -->
+  <header class="topbar" role="banner">
+    <button class="menu-toggle" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false">
+      <i class="material-icons">menu</i>
+    </button>
+    <h1 class="app-title">ToolsApp 2.0</h1>
+    <div class="spacer" aria-hidden="true"></div>
+    <button id="darkModeToggle" aria-label="Toggle dark mode">
+      <i class="material-icons moon-icon">nights_stay</i>
+      <i class="material-icons sun-icon">wb_sunny</i>
+    </button>
+  </header>
+
+  <!-- Collapsible sidebar navigation -->
+  <nav id="sidebar" class="sidebar" aria-label="Primary navigation">
+    <div class="sidebar-header">
+      <button class="sidebar-close" aria-label="Close navigation">
+        <i class="material-icons">close</i>
+      </button>
+      <h2>Menu</h2>
+    </div>
+    <ul class="nav-list">
+      <li><a href="index.html"><i class="material-icons nav-icon">home</i> Home</a></li>
+      <li><a href="payslip.html"><i class="material-icons nav-icon">receipt</i> Payslip Maker</a></li>
+      <li><a href="tax.html"><i class="material-icons nav-icon">account_balance</i> Tax Calculator</a></li>
+      <li><a href="loan.html"><i class="material-icons nav-icon">payments</i> Loan & Bond Calculator</a></li>
+      <li><a href="budget.html" class="active"><i class="material-icons nav-icon">pie_chart</i> Budget Planner</a></li>
+      <li><a href="retirement.html"><i class="material-icons nav-icon">beach_access</i> Retirement Planner</a></li>
+      <li><a href="invoice.html"><i class="material-icons nav-icon">description</i> Invoice Generator</a></li>
+      <li><a href="converters.html"><i class="material-icons nav-icon">swap_horiz</i> Converters</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <p>Version 2.0.1</p>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main id="main" tabindex="-1">
+    <header class="page-header">
+      <h2>50/30/20 Budget Planner</h2>
+      <p>Plan your monthly spending by allocating 50% to <strong>Needs</strong>, 30% to <strong>Wants</strong>, and 20% to <strong>Savings / Debt-pay-down</strong>.</p>
+    </header>
+
+    <!-- Budget form -->
+    <form id="budgetForm" class="budget-form" novalidate>
+      <!-- Income input -->
+      <fieldset>
+        <legend>Net Monthly Income</legend>
+        <label>
+          Net income after tax (R)
+          <div class="input-with-icon">
+            <i class="material-icons input-icon">payments</i>
+            <input type="number" id="netIncome" min="0" step="0.01" required>
+          </div>
+        </label>
+      </fieldset>
+
+      <!-- Needs Bucket -->
+      <fieldset class="budget-bucket needs-bucket">
+        <legend>
+          <i class="material-icons legend-icon">home</i> Needs – 50%
+        </legend>
+        <p class="hint">Rent, groceries, transport, insurance, utilities…</p>
+        <div id="needsContainer" class="dynamic-list" data-type="needs">
+          <button type="button" class="add-row" data-target="needsContainer">
+            <i class="material-icons">add</i> Add expense
+          </button>
+        </div>
+      </fieldset>
+
+      <!-- Wants Bucket -->
+      <fieldset class="budget-bucket wants-bucket">
+        <legend>
+          <i class="material-icons legend-icon">shopping_cart</i> Wants – 30%
+        </legend>
+        <p class="hint">Eating out, entertainment, subscriptions…</p>
+        <div id="wantsContainer" class="dynamic-list" data-type="wants">
+          <button type="button" class="add-row" data-target="wantsContainer">
+            <i class="material-icons">add</i> Add expense
+          </button>
+        </div>
+      </fieldset>
+
+      <!-- Savings Bucket -->
+      <fieldset class="budget-bucket savings-bucket">
+        <legend>
+          <i class="material-icons legend-icon">savings</i> Savings / Debt – 20%
+        </legend>
+        <p class="hint">Emergency fund, investments, extra debt payments…</p>
+        <div id="savingsContainer" class="dynamic-list" data-type="savings">
+          <button type="button" class="add-row" data-target="savingsContainer">
+            <i class="material-icons">add</i> Add entry
+          </button>
+        </div>
+      </fieldset>
+
+      <!-- Summary outputs -->
+      <section class="summary" aria-label="Budget summary">
+        <h3>Summary</h3>
+        <div class="grid-3">
+          <div class="summary-item">
+            <span class="label">Needs (50%)</span>
+            <output id="needsTotal">R0.00</o>
+          </div>
+          <div class="summary-item">
+            <span class="label">Wants (30%)</span>
+            <output id="wantsTotal">R0.00</o>
+          </div>
+          <div class="summary-item">
+            <span class="label">Savings / Debt (20%)</span>
+            <output id="savingsTotal">R0.00</o>
+          </div>
+        </div>
+        <p id="overspendWarning" class="warning" hidden>
+          <i class="material-icons warning-icon">warning</i> You're over budget in one or more categories.
+        </p>
+      </section>
+
+      <!-- Action buttons -->
+      <div class="form-actions">
+        <button type="button" id="calculateBtn">
+          <i class="material-icons">calculate</i> Calculate
+        </button>
+        <button type="reset">
+          <i class="material-icons">refresh</i> Reset
+        </button>
+        <button type="button" id="printBtn">
+          <i class="material-icons">print</i> Print
+        </button>
+        <button type="button" id="downloadCsvBtn">
+          <i class="material-icons">download</i> Download CSV
+        </button>
+      </div>
+    </form>
+
+    <!-- Results section: pie chart + breakdown table -->
+    <section class="results" aria-label="Visual breakdown" hidden>
+      <h3>Visual Breakdown</h3>
+      <div class="chart-container">
+        <canvas id="budgetChart" aria-label="Budget pie chart" role="img"></canvas>
+      </div>
+
+      <div class="table-container">
+        <table id="budgetTable" class="budget-table" aria-label="Detailed budget table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Description</th>
+              <th>Amount (R)</th>
+            </tr>
+          </thead>
+          <tbody><!-- JS will inject row items here --></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 ToolsApp. &copy; Ramanugu TM</p>
+      <div class="footer-links">
+        <a href="#" class="footer-link">Terms</a>
+        <a href="#" class="footer-link">Privacy</a>
+        <a href="#" class="footer-link">About</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/budgetPlanner.js" defer></script>
+</body>
+</html>

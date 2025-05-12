@@ -1,246 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PaySlip Generator</title>
-    <link rel="stylesheet" href="styles.css">
-   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ToolsApp 2.0 - Your personal finance toolkit with calculators and planners">
+  <meta name="theme-color" content="#4a6fa5">
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  
+  <!-- Google Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <!-- Third-party libraries -->
+  <script src="assets/libs/chart.js/chart.umd.min.js" defer></script>
+  <script src="assets/libs/html2canvas/html2canvas.min.js" defer></script>
+  <script src="assets/libs/jspdf/jspdf.umd.min.js" defer></script>
+
+  <title>ToolsApp 2.0 – Personal Finance Toolkit</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  
+  <!-- App manifest (for PWA) -->
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <!-- Header Section -->
-    <header class="main-header">
-        <div class="header-content">
-            <h1 class="site-title">OnlineToolBox</h1>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="index.html" class="active">PaySlip Maker</a></li>
-                    <li><a href="tax.html">Tax Calculator</a></li>
-                    <li><a href="#">Car Value Checker</a></li>
-                    <li><a href="#">Invoice Generator</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+  <!-- Skip-link for accessibility -->
+  <a class="skip-link" href="#main">Skip to main content</a>
 
-    <!-- Main Container -->
-    <div class="container">
-        <div class="calculator-card">
-            <h2>PaySlip Generator</h2>
+  <!-- Header / Top-bar -->
+  <header class="topbar" role="banner">
+    <button class="menu-toggle" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false">
+      <i class="material-icons">menu</i>
+    </button>
+    <h1 class="app-title">ToolsApp 2.0</h1>
+    <div class="spacer" aria-hidden="true"></div>
+    <button id="darkModeToggle" aria-label="Toggle dark mode">
+      <i class="material-icons moon-icon">nights_stay</i>
+      <i class="material-icons sun-icon">wb_sunny</i>
+    </button>
+  </header>
 
-            <!-- Company Information Section -->
-            <div class="company-details">
-                <h3>Company Information</h3>
-                <div class="input-section">
-                    <div class="input-group">
-                        <label for="companyLogo">Company Logo</label>
-                        <input type="file" id="companyLogo" accept="image/*">
-                        <div class="logo-preview"></div>
-                    </div>
-                    <div class="input-group">
-                        <label for="companyName">Company Name</label>
-                        <input type="text" id="companyName" placeholder="Enter company name">
-                    </div>
-                    <div class="input-group">
-                        <label for="companyAddress">Company Address</label>
-                        <input type="text" id="companyAddress" placeholder="Enter company address">
-                    </div>
-                    <div class="input-group">
-                        <label for="poBox">PO Box</label>
-                        <input type="text" id="poBox" placeholder="Enter PO Box">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Employee Details Section -->
-            <div class="employee-details">
-                <h3>Employee Details</h3>
-                <div class="input-section">
-                    <div class="input-group">
-                        <label for="employeeName">Employee Name</label>
-                        <input type="text" id="employeeName" placeholder="Enter employee name">
-                    </div>
-                    <div class="input-group">
-                        <label for="employeeId">Employee Number</label>
-                        <input type="text" id="employeeId" placeholder="Enter employee ID">
-                    </div>
-                    <div class="input-group">
-                        <label for="idNumber">Identity Number</label>
-                        <input type="text" id="idNumber" placeholder="Enter ID number">
-                    </div>
-                    <div class="input-group">
-                        <label for="designation">Designation</label>
-                        <input type="text" id="designation" placeholder="Enter designation">
-                    </div>
-                    <div class="input-group">
-                        <label for="department">Department</label>
-                        <input type="text" id="department" placeholder="Enter department">
-                    </div>
-                    <div class="input-group">
-                        <label for="payPoint">Pay Point</label>
-                        <input type="text" id="payPoint" placeholder="Enter pay point">
-                    </div>
-                    <div class="input-group">
-                        <label for="children">Number of Children</label>
-                        <input type="number" id="children" min="0" placeholder="Enter number of children">
-                    </div>
-                    <div class="input-group">
-                        <label for="sex">Sex</label>
-                        <select id="sex">
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label for="status">Marital Status</label>
-                        <select id="status">
-                            <option value="single">Single</option>
-                            <option value="married">Married</option>
-                            <option value="divorced">Divorced</option>
-                            <option value="widowed">Widowed</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Employment Details Section -->
-            <div class="employment-details">
-                <h3>Employment Details</h3>
-                <div class="input-section">
-                    <div class="input-group">
-                        <label for="hourlyRate">Hourly Rate</label>
-                        <input type="number" id="hourlyRate" step="0.01" placeholder="Enter hourly rate">
-                    </div>
-                    <div class="input-group">
-                        <label for="normalHours">Normal Hours</label>
-                        <input type="number" id="normalHours" placeholder="Enter normal hours">
-                    </div>
-                    <div class="input-group">
-                        <label for="leaveDays">Leave Days Due</label>
-                        <input type="number" id="leaveDays" step="0.5" placeholder="Enter leave days">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Earnings Section -->
-            <div class="earnings-section">
-                <h3>Earnings</h3>
-                <div class="input-section">
-                    <div class="input-group">
-                        <label for="basicSalary">Basic Salary</label>
-                        <input type="number" id="basicSalary" step="0.01" placeholder="Enter basic salary">
-                    </div>
-                    <div class="input-group">
-                        <label for="otherBonus">Other Bonus</label>
-                        <input type="number" id="otherBonus" step="0.01" placeholder="Enter bonus amount">
-                    </div>
-                    <div class="input-group">
-                        <label for="overtimeHours">Overtime Hours</label>
-                        <input type="number" id="overtimeHours" step="0.5" placeholder="Enter overtime hours">
-                    </div>
-                    <div class="input-group">
-                        <label for="overtimeRate">Overtime Rate (@)</label>
-                        <input type="number" id="overtimeRate" step="0.1" placeholder="Enter overtime rate">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Deductions Section -->
-            <div class="deductions-section">
-                <h3>Deductions</h3>
-                <div class="input-section">
-                    <div class="input-group">
-                        <label for="medicalAid">Medical Aid</label>
-                        <input type="number" id="medicalAid" step="0.01" placeholder="Enter medical aid amount">
-                    </div>
-                    <div class="input-group">
-                        <label for="pensionFund">Pension Fund</label>
-                        <input type="number" id="pensionFund" step="0.01" placeholder="Enter pension fund amount">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Period Section -->
-            <div class="period-section">
-                <h3>Period</h3>
-                <div class="input-section">
-                    <div class="input-group">
-                        <label for="paymentDate">Payment Date</label>
-                        <input type="date" id="paymentDate">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Style Customization Section -->
-            <div class="style-customization">
-                <h3>Payslip Style</h3>
-                <div class="style-options">
-                    <div class="input-section">
-                        <div class="input-group">
-                            <label for="payslipStyle">Select Style</label>
-                            <select id="payslipStyle">
-                                <option value="modern">Modern Clean</option>
-                                <option value="classic">Classic Professional</option>
-                                <option value="minimal">Minimal Design</option>
-                                <option value="corporate">Corporate Premium</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label for="primaryColor">Primary Color</label>
-                            <input type="color" id="primaryColor" value="#2563eb">
-                        </div>
-                        <div class="input-group">
-                            <label for="secondaryColor">Secondary Color</label>
-                            <input type="color" id="secondaryColor" value="#4f46e5">
-                        </div>
-                        <div class="input-group">
-                            <label for="accentColor">Accent Color</label>
-                            <input type="color" id="accentColor" value="#0ea5e9">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Style Previews -->
-                <div class="style-previews">
-                    <div class="preview-card modern" data-style="modern">
-                        <h4>Modern Clean</h4>
-                        <div class="preview-content"></div>
-                    </div>
-                    <div class="preview-card classic" data-style="classic">
-                        <h4>Classic Professional</h4>
-                        <div class="preview-content"></div>
-                    </div>
-                    <div class="preview-card minimal" data-style="minimal">
-                        <h4>Minimal Design</h4>
-                        <div class="preview-content"></div>
-                    </div>
-                    <div class="preview-card corporate" data-style="corporate">
-                        <h4>Corporate Premium</h4>
-                        <div class="preview-content"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Buttons -->
-            <div class="button-group">
-                <button id="calculateBtn" class="calculate-btn">Calculate</button>
-                <button id="generatePdfBtn" class="generate-btn">Generate PaySlip PDF</button>
-            </div>
-
-            <!-- Results Section (PaySlip Preview) -->
-            <div id="payslip" class="results-section"></div>
-        </div>
+  <!-- Collapsible sidebar navigation -->
+  <nav id="sidebar" class="sidebar" aria-label="Primary navigation">
+    <div class="sidebar-header">
+      <button class="sidebar-close" aria-label="Close navigation">
+        <i class="material-icons">close</i>
+      </button>
+      <h2>Menu</h2>
     </div>
-
-    <!-- PaySlip Template (Hidden by default) -->
-    <div id="payslip-container" style="display: none;">
-        <div id="payslip-pdf" class="payslip-modern">
-            <!-- PaySlip content will be dynamically inserted here -->
-        </div>
+    <ul class="nav-list">
+      <li><a href="index.html" class="active"><i class="material-icons nav-icon">home</i> Home</a></li>
+      <li><a href="payslip.html"><i class="material-icons nav-icon">receipt</i> Payslip Maker</a></li>
+      <li><a href="tax.html"><i class="material-icons nav-icon">account_balance</i> Tax Calculator</a></li>
+      <li><a href="loan.html"><i class="material-icons nav-icon">payments</i> Loan & Bond Calculator</a></li>
+      <li><a href="budget.html"><i class="material-icons nav-icon">pie_chart</i> Budget Planner</a></li>
+      <li><a href="retirement.html"><i class="material-icons nav-icon">beach_access</i> Retirement Planner</a></li>
+      <li><a href="invoice.html"><i class="material-icons nav-icon">description</i> Invoice Generator</a></li>
+      <li><a href="converters.html"><i class="material-icons nav-icon">swap_horiz</i> Converters</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <p>Version 2.0.1</p>
     </div>
+  </nav>
 
-    <script src="payslipMaker.js"></script>
+  <!-- Main content -->
+  <main id="main" tabindex="-1">
+    <!-- Hero banner -->
+    <section class="hero">
+      <div class="hero-content">
+        <h2>Your Offline Personal Finance Toolkit</h2>
+        <p>Plan, calculate and track – all right here in South Africa, no sign-ups needed.</p>
+      </div>
+    </section>
+
+    <!-- Tool launcher grid -->
+    <section class="tool-grid-section">
+      <h2 class="section-title">Finance Tools</h2>
+      
+      <div class="tool-grid" aria-label="Tool shortcuts">
+        <article class="tool-card">
+          <a href="payslip.html">
+            <div class="card-icon-wrapper">
+              <i class="material-icons tool-icon">receipt</i>
+            </div>
+            <div class="card-content">
+              <h3>Payslip Maker</h3>
+              <p>Create professional payslips in seconds.</p>
+            </div>
+          </a>
+        </article>
+
+        <article class="tool-card">
+          <a href="tax.html">
+            <div class="card-icon-wrapper">
+              <i class="material-icons tool-icon">account_balance</i>
+            </div>
+            <div class="card-content">
+              <h3>Tax Calculator</h3>
+              <p>See your SARS PAYE for 2024/25.</p>
+            </div>
+          </a>
+        </article>
+
+        <article class="tool-card">
+          <a href="loan.html">
+            <div class="card-icon-wrapper">
+              <i class="material-icons tool-icon">payments</i>
+            </div>
+            <div class="card-content">
+              <h3>Loan & Bond</h3>
+              <p>Crunch repayments and amortisation.</p>
+            </div>
+          </a>
+        </article>
+
+        <article class="tool-card">
+          <a href="budget.html">
+            <div class="card-icon-wrapper">
+              <i class="material-icons tool-icon">pie_chart</i>
+            </div>
+            <div class="card-content">
+              <h3>Budget Planner</h3>
+              <p>50/30/20 made easy – track your spend.</p>
+            </div>
+          </a>
+        </article>
+
+        <article class="tool-card">
+          <a href="retirement.html">
+            <div class="card-icon-wrapper">
+              <i class="material-icons tool-icon">beach_access</i>
+            </div>
+            <div class="card-content">
+              <h3>Retirement Planner</h3>
+              <p>Forecast your nest egg with SA rates.</p>
+            </div>
+          </a>
+        </article>
+
+        <article class="tool-card">
+          <a href="invoice.html">
+            <div class="card-icon-wrapper">
+              <i class="material-icons tool-icon">description</i>
+            </div>
+            <div class="card-content">
+              <h3>Invoice Generator</h3>
+              <p>Create & download VAT-ready invoices.</p>
+            </div>
+          </a>
+        </article>
+
+        <article class="tool-card">
+          <a href="converters.html">
+            <div class="card-icon-wrapper">
+              <i class="material-icons tool-icon">swap_horiz</i>
+            </div>
+            <div class="card-content">
+              <h3>Converters</h3>
+              <p>Units, currency, fuel – all in one place.</p>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Recently used tools (populated by JS) -->
+    <section class="recent-tools" aria-labelledby="recent-heading">
+      <h2 id="recent-heading" class="section-title">Recently Used</h2>
+      <div class="recent-container">
+        <ul class="recent-list">
+          <!-- JS will inject list items here -->
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 ToolsApp. &copy; Ramanugu TM</p>
+      <div class="footer-links">
+        <a href="#" class="footer-link">Terms</a>
+        <a href="#" class="footer-link">Privacy</a>
+        <a href="#" class="footer-link">About</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Core script -->
+  <script src="assets/js/main.js" defer></script>
 </body>
 </html>

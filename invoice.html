@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Create professional invoices with VAT calculations - ToolsApp 2.0">
+  <meta name="theme-color" content="#4a6fa5">
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  
+  <!-- Google Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <!-- Third-party libraries -->
+  <script src="assets/libs/chart.js/chart.umd.min.js" defer></script>
+  <script src="assets/libs/html2canvas/html2canvas.min.js" defer></script>
+  <script src="assets/libs/jspdf/jspdf.umd.min.js" defer></script>
+
+  <title>Invoice Generator – ToolsApp 2.0</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  
+  <!-- App manifest (for PWA) -->
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <!-- Skip-link for accessibility -->
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- Header / Top-bar -->
+  <header class="topbar" role="banner">
+    <button class="menu-toggle" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false">
+      <i class="material-icons">menu</i>
+    </button>
+    <h1 class="app-title">ToolsApp 2.0</h1>
+    <div class="spacer" aria-hidden="true"></div>
+    <button id="darkModeToggle" aria-label="Toggle dark mode">
+      <i class="material-icons moon-icon">nights_stay</i>
+      <i class="material-icons sun-icon">wb_sunny</i>
+    </button>
+  </header>
+
+  <!-- Collapsible sidebar navigation -->
+  <nav id="sidebar" class="sidebar" aria-label="Primary navigation">
+    <div class="sidebar-header">
+      <button class="sidebar-close" aria-label="Close navigation">
+        <i class="material-icons">close</i>
+      </button>
+      <h2>Menu</h2>
+    </div>
+    <ul class="nav-list">
+      <li><a href="index.html"><i class="material-icons nav-icon">home</i> Home</a></li>
+      <li><a href="payslip.html"><i class="material-icons nav-icon">receipt</i> Payslip Maker</a></li>
+      <li><a href="tax.html"><i class="material-icons nav-icon">account_balance</i> Tax Calculator</a></li>
+      <li><a href="loan.html"><i class="material-icons nav-icon">payments</i> Loan & Bond Calculator</a></li>
+      <li><a href="budget.html"><i class="material-icons nav-icon">pie_chart</i> Budget Planner</a></li>
+      <li><a href="retirement.html"><i class="material-icons nav-icon">beach_access</i> Retirement Planner</a></li>
+      <li><a href="invoice.html" class="active"><i class="material-icons nav-icon">description</i> Invoice Generator</a></li>
+      <li><a href="converters.html"><i class="material-icons nav-icon">swap_horiz</i> Converters</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <p>Version 2.0.1</p>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main id="main" tabindex="-1">
+    <header class="page-header">
+      <h2>Invoice Generator</h2>
+      <p>Build VAT-ready invoices, save your logo once, and download a clean PDF for clients.</p>
+    </header>
+
+    <!-- Invoice form -->
+    <form id="invoiceForm" class="invoice-form" novalidate>
+      <!-- Your business details -->
+      <fieldset>
+        <legend><i class="material-icons legend-icon">business</i> Your Business</legend>
+        <div class="grid-2">
+          <label>
+            Business name
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">store</i>
+              <input type="text" id="bizName" required>
+            </div>
+          </label>
+          <label>
+            VAT number (optional)
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">confirmation_number</i>
+              <input type="text" id="bizVat">
+            </div>
+          </label>
+        </div>
+        <label>
+          Address / Contact
+          <div class="input-with-icon">
+            <i class="material-icons input-icon">location_on</i>
+            <textarea id="bizContact" rows="2" required></textarea>
+          </div>
+        </label>
+        <label>
+          Logo (PNG/JPG ≤ 300 KB)
+          <div class="file-input-wrapper">
+            <i class="material-icons file-icon">image</i>
+            <input type="file" id="bizLogo" accept="image/*">
+          </div>
+        </label>
+      </fieldset>
+
+      <!-- Client details -->
+      <fieldset>
+        <legend><i class="material-icons legend-icon">person</i> Client</legend>
+        <div class="grid-2">
+          <label>
+            Client name
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">person</i>
+              <input type="text" id="clientName" required>
+            </div>
+          </label>
+          <label>
+            Client contact / address
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">contact_mail</i>
+              <textarea id="clientContact" rows="2" required></textarea>
+            </div>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Invoice meta -->
+      <fieldset>
+        <legend><i class="material-icons legend-icon">receipt</i> Invoice Details</legend>
+        <div class="grid-3">
+          <label>
+            Invoice #
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">tag</i>
+              <input type="number" id="invoiceNumber" min="1" required>
+            </div>
+          </label>
+          <label>
+            Invoice date
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">event</i>
+              <input type="date" id="invoiceDate" required>
+            </div>
+          </label>
+          <label>
+            Due date
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">event_busy</i>
+              <input type="date" id="dueDate" required>
+            </div>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Line items -->
+      <fieldset>
+        <legend><i class="material-icons legend-icon">list</i> Line Items</legend>
+        <div class="invoice-items-header">
+          <div class="item-desc">Description</div>
+          <div class="item-qty">Quantity</div>
+          <div class="item-rate">Rate (R)</div>
+          <div class="item-action"></div>
+        </div>
+        <div id="itemsContainer" class="dynamic-list invoice-items-list" data-type="item">
+          <!-- JS injects description, qty, rate inputs here -->
+        </div>
+        <button type="button" id="addItemBtn" class="add-item-btn">
+          <i class="material-icons">add</i> Add Item
+        </button>
+      </fieldset>
+
+      <!-- VAT toggle -->
+      <label class="switch vat-switch">
+        <input type="checkbox" id="includeVat" checked>
+        <span class="switch-label">Include 15% VAT</span>
+      </label>
+
+      <!-- Totals -->
+      <section class="summary" aria-label="Totals">
+        <h3><i class="material-icons summary-icon">summarize</i> Totals</h3>
+        <div class="grid-3">
+          <div class="summary-item">
+            <span class="label">Subtotal</span>
+            <output id="subTotal">R0.00</o>
+          </div>
+          <div class="summary-item" id="vatRow">
+            <span class="label">VAT (15%)</span>
+            <output id="vatTotal">R0.00</o>
+          </div>
+          <div class="summary-item net">
+            <span class="label">Grand total</span>
+            <output id="grandTotal">R0.00</o>
+          </div>
+        </div>
+      </section>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="button" id="calculateBtn">
+          <i class="material-icons">calculate</i> Calculate
+        </button>
+        <button type="reset">
+          <i class="material-icons">refresh</i> Reset
+        </button>
+        <button type="button" id="printBtn">
+          <i class="material-icons">print</i> Print
+        </button>
+        <button type="button" id="downloadPdfBtn">
+          <i class="material-icons">picture_as_pdf</i> Download PDF
+        </button>
+      </div>
+    </form>
+
+    <!-- Hidden printable template -->
+    <section id="invoicePreview" class="invoice-preview" hidden aria-label="Invoice preview">
+      <!-- JS clones content here for print/PDF -->
+      <div class="invoice-wrapper">
+        <header class="invoice-header">
+          <img id="pvLogo" alt="Logo" class="logo">
+          <div class="biz-details">
+            <h2 id="pvBizName"></h2>
+            <p id="pvBizContact"></p>
+            <p id="pvBizVat"></p>
+          </div>
+        </header>
+
+        <section class="client-details">
+          <h3>Billed to:</h3>
+          <p id="pvClientName"></p>
+          <p id="pvClientContact"></p>
+        </section>
+
+        <section class="invoice-meta">
+          <p><strong>Invoice #:</strong> <span id="pvInvoiceNumber"></span></p>
+          <p><strong>Date:</strong> <span id="pvInvoiceDate"></span></p>
+          <p><strong>Due:</strong> <span id="pvDueDate"></span></p>
+        </section>
+
+        <table class="invoice-table" aria-label="Line items table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Qty</th>
+              <th>Rate (R)</th>
+              <th>Total (R)</th>
+            </tr>
+          </thead>
+          <tbody id="pvItems"><!-- rows go here --></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3">Subtotal</td>
+              <td id="pvSubTotal"></td>
+            </tr>
+            <tr id="pvVatRow">
+              <td colspan="3">VAT (15%)</td>
+              <td id="pvVat"></td>
+            </tr>
+            <tr>
+              <td colspan="3"><strong>Grand total</strong></td>
+              <td id="pvGrandTotal" class="net"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 ToolsApp. &copy; Ramanugu TM</p>
+      <div class="footer-links">
+        <a href="#" class="footer-link">Terms</a>
+        <a href="#" class="footer-link">Privacy</a>
+        <a href="#" class="footer-link">About</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/invoiceGenerator.js" defer></script>
+</body>
+</html>

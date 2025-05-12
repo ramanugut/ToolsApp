@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Convert between currencies, units, and measurements with ease - ToolsApp 2.0">
+  <meta name="theme-color" content="#4a6fa5">
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  
+  <!-- Google Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <!-- Third-party libraries -->
+  <script src="assets/libs/chart.js/chart.umd.min.js" defer></script>
+  <script src="assets/libs/html2canvas/html2canvas.min.js" defer></script>
+  <script src="assets/libs/jspdf/jspdf.umd.min.js" defer></script>
+
+  <title>Converters – ToolsApp 2.0</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  
+  <!-- App manifest (for PWA) -->
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <!-- Skip-link for accessibility -->
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- Header / Top-bar -->
+  <header class="topbar" role="banner">
+    <button class="menu-toggle" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false">
+      <i class="material-icons">menu</i>
+    </button>
+    <h1 class="app-title">ToolsApp 2.0</h1>
+    <div class="spacer" aria-hidden="true"></div>
+    <button id="darkModeToggle" aria-label="Toggle dark mode">
+      <i class="material-icons moon-icon">nights_stay</i>
+      <i class="material-icons sun-icon">wb_sunny</i>
+    </button>
+  </header>
+
+  <!-- Collapsible sidebar navigation -->
+  <nav id="sidebar" class="sidebar" aria-label="Primary navigation">
+    <div class="sidebar-header">
+      <button class="sidebar-close" aria-label="Close navigation">
+        <i class="material-icons">close</i>
+      </button>
+      <h2>Menu</h2>
+    </div>
+    <ul class="nav-list">
+      <li><a href="index.html"><i class="material-icons nav-icon">home</i> Home</a></li>
+      <li><a href="payslip.html"><i class="material-icons nav-icon">receipt</i> Payslip Maker</a></li>
+      <li><a href="tax.html"><i class="material-icons nav-icon">account_balance</i> Tax Calculator</a></li>
+      <li><a href="loan.html"><i class="material-icons nav-icon">payments</i> Loan & Bond Calculator</a></li>
+      <li><a href="budget.html"><i class="material-icons nav-icon">pie_chart</i> Budget Planner</a></li>
+      <li><a href="retirement.html"><i class="material-icons nav-icon">beach_access</i> Retirement Planner</a></li>
+      <li><a href="invoice.html"><i class="material-icons nav-icon">description</i> Invoice Generator</a></li>
+      <li><a href="converters.html" class="active"><i class="material-icons nav-icon">swap_horiz</i> Converters</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <p>Version 2.0.1</p>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main id="main" tabindex="-1">
+    <header class="page-header">
+      <h2>Unit &amp; Currency Converters</h2>
+      <p>Quickly convert rand to foreign currencies, metric to imperial, temperature, and fuel usage.</p>
+    </header>
+
+    <!-- Tabs navigation -->
+    <div class="tabs" role="tablist">
+      <button role="tab" aria-controls="currencyPanel" aria-selected="true" class="active">
+        <i class="material-icons tab-icon">currency_exchange</i> Currency
+      </button>
+      <button role="tab" aria-controls="lengthPanel" aria-selected="false">
+        <i class="material-icons tab-icon">straighten</i> Length
+      </button>
+      <button role="tab" aria-controls="weightPanel" aria-selected="false">
+        <i class="material-icons tab-icon">fitness_center</i> Weight
+      </button>
+      <button role="tab" aria-controls="volumePanel" aria-selected="false">
+        <i class="material-icons tab-icon">local_drink</i> Volume
+      </button>
+      <button role="tab" aria-controls="temperaturePanel" aria-selected="false">
+        <i class="material-icons tab-icon">thermostat</i> Temperature
+      </button>
+      <button role="tab" aria-controls="fuelPanel" aria-selected="false">
+        <i class="material-icons tab-icon">local_gas_station</i> Fuel
+      </button>
+    </div>
+
+    <!-- Panels -->
+    <section id="currencyPanel" class="tab-panel" role="tabpanel">
+      <form class="converter-form currency-form">
+        <div class="grid-2">
+          <label>
+            Amount
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">payments</i>
+              <input type="number" id="currencyAmount" min="0" step="0.01" required>
+            </div>
+          </label>
+          <label>
+            From
+            <select id="currencyFrom" required></select>
+          </label>
+          <label>
+            To
+            <select id="currencyTo" required></select>
+          </label>
+          <label>
+            Result
+            <output id="currencyResult" class="result-output">0</output>
+          </label>
+        </div>
+        <button type="button" id="swapCurrencyBtn">
+          <i class="material-icons">swap_vert</i> Swap
+        </button>
+      </form>
+      <p class="rate-note">
+        <i class="material-icons info-icon">info</i> 
+        Rates are static; update them manually in <code>converters.js</code> when needed.
+      </p>
+    </section>
+
+    <section id="lengthPanel" class="tab-panel" role="tabpanel" hidden>
+      <form class="converter-form length-form">
+        <div class="grid-2">
+          <label>
+            Value
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">straighten</i>
+              <input type="number" id="lengthValue" step="0.01" required>
+            </div>
+          </label>
+          <label>
+            From
+            <select id="lengthFrom"></select>
+          </label>
+          <label>
+            To
+            <select id="lengthTo"></select>
+          </label>
+          <label>
+            Result
+            <output id="lengthResult" class="result-output">0</output>
+          </label>
+        </div>
+      </form>
+    </section>
+
+    <section id="weightPanel" class="tab-panel" role="tabpanel" hidden>
+      <form class="converter-form weight-form">
+        <div class="grid-2">
+          <label>
+            Value
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">fitness_center</i>
+              <input type="number" id="weightValue" step="0.01" required>
+            </div>
+          </label>
+          <label>
+            From
+            <select id="weightFrom"></select>
+          </label>
+          <label>
+            To
+            <select id="weightTo"></select>
+          </label>
+          <label>
+            Result
+            <output id="weightResult" class="result-output">0</output>
+          </label>
+        </div>
+      </form>
+    </section>
+
+    <section id="volumePanel" class="tab-panel" role="tabpanel" hidden>
+      <form class="converter-form volume-form">
+        <div class="grid-2">
+          <label>
+            Value
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">local_drink</i>
+              <input type="number" id="volumeValue" step="0.01" required>
+            </div>
+          </label>
+          <label>
+            From
+            <select id="volumeFrom"></select>
+          </label>
+          <label>
+            To
+            <select id="volumeTo"></select>
+          </label>
+          <label>
+            Result
+            <output id="volumeResult" class="result-output">0</output>
+          </label>
+        </div>
+      </form>
+    </section>
+
+    <section id="temperaturePanel" class="tab-panel" role="tabpanel" hidden>
+      <form class="converter-form temperature-form">
+        <div class="grid-2">
+          <label>
+            Value
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">thermostat</i>
+              <input type="number" id="tempValue" step="0.01" required>
+            </div>
+          </label>
+          <label>
+            From
+            <select id="tempFrom">
+              <option value="c">°C (Celsius)</option>
+              <option value="f">°F (Fahrenheit)</option>
+            </select>
+          </label>
+          <label>
+            Result
+            <output id="tempResult" class="result-output">0</output>
+          </label>
+        </div>
+      </form>
+      <div class="temp-conversion-info">
+        <h4><i class="material-icons">help_outline</i> Conversion Formulas:</h4>
+        <p>°C to °F: (°C × 9/5) + 32</p>
+        <p>°F to °C: (°F − 32) × 5/9</p>
+      </div>
+    </section>
+
+    <section id="fuelPanel" class="tab-panel" role="tabpanel" hidden>
+      <form class="converter-form fuel-form">
+        <div class="grid-2">
+          <label>
+            Value
+            <div class="input-with-icon">
+              <i class="material-icons input-icon">local_gas_station</i>
+              <input type="number" id="fuelValue" step="0.01" required>
+            </div>
+          </label>
+          <label>
+            From
+            <select id="fuelFrom">
+              <option value="l100">L/100 km (Liters per 100 kilometers)</option>
+              <option value="kml">km/L (Kilometers per liter)</option>
+              <option value="mpg">MPG (UK) (Miles per gallon)</option>
+            </select>
+          </label>
+          <label>
+            Result
+            <output id="fuelResult" class="result-output">0</output>
+          </label>
+        </div>
+      </form>
+      <div class="fuel-conversion-info">
+        <h4><i class="material-icons">help_outline</i> Common Values:</h4>
+        <ul class="conversion-examples">
+          <li>5 L/100 km ≈ 20 km/L ≈ 56.5 MPG (UK)</li>
+          <li>8 L/100 km ≈ 12.5 km/L ≈ 35.3 MPG (UK)</li>
+          <li>10 L/100 km ≈ 10 km/L ≈ 28.2 MPG (UK)</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 ToolsApp. &copy; Ramanugu TM</p>
+      <div class="footer-links">
+        <a href="#" class="footer-link">Terms</a>
+        <a href="#" class="footer-link">Privacy</a>
+        <a href="#" class="footer-link">About</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/converters.js" defer></script>
+</body>
+</html>
