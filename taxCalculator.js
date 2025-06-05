@@ -231,6 +231,7 @@ document.addEventListener("DOMContentLoaded", function () {
     createTaxChart(annualNetPay, totalAnnualDeductions);
 
     // Update summary
+    const taxOnExtra100 = 100 * (marginalRate / 100);
     const summaryText = `If you make ${formatCurrency(
       annualIncome
     )} a year living in South Africa, you will be taxed ${formatCurrency(
@@ -243,10 +244,10 @@ document.addEventListener("DOMContentLoaded", function () {
       averageRate
     )} and your marginal tax rate is ${formatPercentage(
       marginalRate
-    )}. This marginal tax rate means that your immediate additional income will be taxed at this rate. For instance, an increase of R 100 in your salary will be taxed R ${marginalRate.toFixed(
+    )}. This marginal tax rate means that your immediate additional income will be taxed at this rate. For instance, an increase of R 100 in your salary will be taxed R ${taxOnExtra100.toFixed(
       2
     )}, hence, your net pay will only increase by R ${(
-      100 - marginalRate
+      100 - taxOnExtra100
     ).toFixed(2)}.`;
 
     document.getElementById("summaryText").textContent = summaryText;
