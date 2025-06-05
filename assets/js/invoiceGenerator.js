@@ -118,17 +118,6 @@
     function calculate() {
       const items = gatherItems();
       
-      // For debugging
-      console.log("Items gathered:", items);
-      if (items.length === 0) {
-        console.log("No valid items found. Row structure might be incorrect.");
-        const rows = document.querySelectorAll('#itemsContainer .row');
-        console.log("Number of rows found:", rows.length);
-        if (rows.length > 0) {
-          console.log("First row structure:", rows[0].innerHTML);
-          console.log("First row inputs:", rows[0].querySelectorAll('input').length);
-        }
-      }
       
       if (!items.length) {
         alert('Please add at least one line item.');
