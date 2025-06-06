@@ -74,8 +74,8 @@
       const taxable = Math.max(income - deductions, 0);
 
       const tax = calcTax(taxable);
-      const netAnnual = income - tax;
-      const avgRate = income ? (tax / income) * 100 : 0;
+      const netAnnual = income - deductions - tax;
+      const avgRate = taxable ? (tax / taxable) * 100 : 0;
 
       // Update outputs
       outTax.textContent = fmt(tax);
@@ -88,6 +88,8 @@
 
       // Chart
       renderChart(income, netAnnual, tax);
+
+      monthlySection.hidden = !form.elements.showMonthly.checked;
 
       // Save draft
       saveDraft();
