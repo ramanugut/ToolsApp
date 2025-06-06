@@ -42,6 +42,30 @@
 
     const storageKey = 'payslipDraft';
 
+    // SARS 2024/25 tax brackets and rebate
+    const TAX_BRACKETS = [
+      { upTo: 237100, rate: 0.18 },
+      { upTo: 370500, rate: 0.26 },
+      { upTo: 512800, rate: 0.31 },
+      { upTo: 673000, rate: 0.36 },
+      { upTo: 857900, rate: 0.39 },
+      { upTo: 1817000, rate: 0.41 },
+      { upTo: Infinity, rate: 0.45 },
+    ];
+    const PRIMARY_REBATE = 17235;
+
+    function calcAnnualTax(income) {
+      let tax = 0;
+      let prev = 0;
+      for (const { upTo, rate } of TAX_BRACKETS) {
+        const portion = Math.min(income, upTo) - prev;
+        if (portion <= 0) break;
+        tax += portion * rate;
+        prev = upTo;
+      }
+      return Math.max(tax - PRIMARY_REBATE, 0);
+    }
+
     function saveDraft() {
       const data = Object.fromEntries(new FormData(form).entries());
       localStorage.setItem(storageKey, JSON.stringify(data));
@@ -81,8 +105,9 @@
     function calculate() {
       // Basic inputs
       const basicSalary = num(form.elements.basicSalary.value);
-      const paye = num(form.elements.paye.value);
+      let paye = num(form.elements.paye.value);
       const uif = num(form.elements.uif.value);
+      const autoPaye = form.elements.autoPaye?.checked;
 
       // Dynamic lists
       const allowances = gatherItems('allowancesContainer');
@@ -91,6 +116,12 @@
       // Totals
       const allowanceTotal = allowances.reduce((t, r) => t + r.amt, 0);
       const gross = basicSalary + allowanceTotal;
+
+      if (autoPaye) {
+        const annual = gross * 12;
+        paye = calcAnnualTax(annual) / 12;
+        form.elements.paye.value = paye.toFixed(2);
+      }
 
       const deductionsTotal = paye + uif + deductionsExtra.reduce((t, r) => t + r.amt, 0);
       const net = gross - deductionsTotal;
